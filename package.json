@@ -1,0 +1,20 @@
+{
+  "name": "firma_monitor_sub",
+  "version": "1.0.0",
+  "description": "firma service process Scheduling",
+  "main": "app.js",
+  "author": "yhklip990@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.6",
+    "node-telegram-bot-api": "^0.56.0",
+    "node-tmux": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
