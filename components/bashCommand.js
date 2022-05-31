@@ -21,9 +21,18 @@ function execBDJunoCommand(callback) {
 		if (isRunning) {
 			callback(false);
 		} else {
-			exec("sudo systemctl restart bdjuno.service", (error, stdout, stderr) => {
-				callback(true);
-			});
+			try {
+				exec("sudo systemctl restart bdjuno.service", (error, stdout, stderr) => {
+					console.log(error);
+					if (!error) {
+						callback(true);
+					} else {
+						callback(false);
+					}
+				});
+			} catch (e) {
+				callback(false);
+			}
 		}
 	});
 }

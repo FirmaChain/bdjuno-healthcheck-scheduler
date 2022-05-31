@@ -56,7 +56,7 @@ function stopScheduleForBash(req, res) {
 
 function checkProcessStatus(processStatus) {
   if (warningStack === 5) {
-    sendTelegramBotMsg('bash', processStatus);
+    // sendTelegramBotMsg('bash', processStatus);
     warningStack = 0;
     bashInfo.isStarted = false;
 		console.log("[warning] send noti telegram bot message at bash schedule");
@@ -72,20 +72,7 @@ function checkProcessStatus(processStatus) {
   }
 }
 
-function startBDJunoService(req, res) {
-  bashCommand.execBDJunoCommand((result) => {
-    if (result)
-      res.send({
-        code: 200,
-        type: "service",
-        message: result
-      });
-  });
-}
-
 module.exports = {
   startScheduleForBash,
-  stopScheduleForBash,
-
-  startBDJunoService
+  stopScheduleForBash
 }

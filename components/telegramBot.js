@@ -1,25 +1,31 @@
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('../config.json');
+const restartBDJunoService = require('./bdjunoService');
 
-/*
- * Live mode
- */
 const token = process.env.TELEGRAM_BOT_TOKEN || config.TOKEN || undefined;
 const chatId = process.env.CHAT_ID || config.CHAT_ID || undefined;
 
-const bot = new TelegramBot(token, {
-    polling: true
+const BOT = new TelegramBot(token, { polling: true });
+
+BOT.onText(/\/command (.+)/, (message, match) => {
+	switch (match[1]) {
+		case 'restart':
+			restartBDJunoService();
+			break;
+
+		case 'getid':
+
+			break;
+	}
 });
 
-async function sendTelegramBotMsg(type, value) {
-    if (token === undefined) {
-        throw new Error("not found telegram bot token at env");
-    }
+BOT.on('polling_error', (error) => {
+	console.log("POLLING ERROR")
+	console.log(error);
+});
 
-    if (type === 'hasura')
-        await bot.sendMessage(chatId, `[ERROR] Block height is stop at ${value}`);
-    else if (type === 'bash')
-        await bot.sendMessage(chatId, `[ERROR] BDJuno process status is ${value}`);
-}
+async function sendTelegramBotMessage (message) {
+	return await BOT.sendMessage(chatId, message);
+};
 
-module.exports = sendTelegramBotMsg;
+module.exports = sendTelegramBotMessage;
