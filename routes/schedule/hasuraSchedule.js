@@ -27,9 +27,13 @@ function checkBlock(blockHeight) {
 		sendTelegramBotMessage(STOP_BLOCK_HEIGHT(blockHeight));
 
 		execCommand(BDJUNO_STOP_COMMAND(), (result) => {
-			setTimeout(execCommand(BDJUNO_START_COMMAND()), 3000);
+			setTimeout(() => {
+				execCommand(BDJUNO_START_COMMAND(), (result) => {
+					sendTelegramBotMessage(RESTART_BDJUNO_SERVICE());
+				});
+			}, 3000);
 		});
-		
+
 		return;
 	}
 
