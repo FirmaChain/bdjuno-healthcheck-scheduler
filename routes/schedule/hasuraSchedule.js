@@ -1,7 +1,6 @@
-const { send } = require('express/lib/response');
 const startFetchBlock = require('../../components/graphql');
 const sendTelegramBotMessage = require('../../components/telegramBot');
-const { START_HASURA_SCHEDULING, STOP_BLOCK_HEIGHT, STOP_HASURA_SCHEDULING, NOW_BLOCK_HEIGHT_MESSAGE, WARNING_NOT_UPDATE_HIEGHT } = require('../../constants/messages');
+const { START_HASURA_SCHEDULING, STOP_BLOCK_HEIGHT, STOP_HASURA_SCHEDULING, NOW_BLOCK_HEIGHT_MESSAGE, WARNING_NOT_UPDATE_HIEGHT, RESTART_BDJUNO_SERVICE } = require('../../constants/messages');
 
 let prevBlockHeight = 0;
 let nextBlockHeight = 0;
@@ -50,16 +49,16 @@ function startScheduleForHasura(req, res) {
 			message: "already started"
 		});
 
-		return ;
+		return;
 	}
-	
+
 	// Send start message
 	sendTelegramBotMessage(START_HASURA_SCHEDULING());
 
 	hasuraInfo.isStarted = true;
 	hasuraInfo.interval = setInterval(async () => {
 		const blockHeight = await getBlockInfo();
-		
+
 		// Send now block height message
 		if (warningStack === 0 && prevBlockHeight !== nextBlockHeight)
 			sendTelegramBotMessage(NOW_BLOCK_HEIGHT_MESSAGE(blockHeight));
@@ -82,14 +81,14 @@ function stopScheduleForHasura(req, res) {
 			message: "already stoped"
 		});
 
-		return ;
+		return;
 	}
-	
+
 	sendTelegramBotMessage(STOP_HASURA_SCHEDULING());
 
 	hasuraInfo.isStarted = false;
 	clearInterval(hasuraInfo.interval);
-	
+
 	res.send({
 		code: 201,
 		type: "hasura",

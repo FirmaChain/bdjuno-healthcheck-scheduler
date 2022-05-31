@@ -1,14 +1,11 @@
-const bashCommand = require('./bashCommand');
-const sendTelegramBotMessage = require('./telegramBot');
+const { execBDJunoCommand } = require("./bashCommand");
 
-const { RESTART_BDJUNO_SERVICE } = require('../constants/messages');
-
-function restartBDJunoService() {
-  bashCommand.execBDJunoCommand((result) => {
-    if (result) {
-      sendTelegramBotMessage(RESTART_BDJUNO_SERVICE());
-    }
+function restartBDJunoService(callback) {
+  execBDJunoCommand((result) => {
+		callback(result);
   });
 }
 
-module.exports = restartBDJunoService;
+module.exports = {
+  restartBDJunoService
+}
