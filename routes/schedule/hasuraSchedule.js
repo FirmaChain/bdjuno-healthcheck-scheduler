@@ -1,3 +1,4 @@
+const { restartBDJunoService } = require('../../components/bdjunoService');
 const startFetchBlock = require('../../components/graphql');
 const sendTelegramBotMessage = require('../../components/telegramBot');
 const { START_HASURA_SCHEDULING, STOP_BLOCK_HEIGHT, STOP_HASURA_SCHEDULING, NOW_BLOCK_HEIGHT_MESSAGE, WARNING_NOT_UPDATE_HIEGHT, RESTART_BDJUNO_SERVICE } = require('../../constants/messages');
@@ -24,6 +25,11 @@ function checkBlock(blockHeight) {
 		// Send stop block update height
 		sendTelegramBotMessage(STOP_BLOCK_HEIGHT(blockHeight));
 
+		restartBDJunoService((result) => {
+			if (result) {
+				sendTelegramBotMessage(RESTART_BDJUNO_SERVICE());
+			}
+		});
 		return;
 	}
 
