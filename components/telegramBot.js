@@ -1,29 +1,36 @@
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('../config.json');
-const { RESTART_BDJUNO_SERVICE } = require('../constants/messages');
 
-const token = process.env.TELEGRAM_BOT_TOKEN || config.TOKEN || undefined;
-const chatId = process.env.CHAT_ID || config.CHAT_ID || undefined;
+const HEALTH = {
+	token: process.env.HEALTH_BOT_TOKEN || config.HEALTH_BOT.TOKEN || undefined,
+	chatId: process.env.HEALTH_BOT_CHAT_ID || config.HEALTH_BOT.CHAT_ID || undefined
+}
 
-const BOT = new TelegramBot(token, { polling: true });
+const NOTIFICATION = {
+	token: process.env.NOTIFICATION_BOT_TOKEN || config.NOTIFICATION_BOT.TOKEN || undefined,
+	chatId: process.env.NOTIFICATION_BOT_CHAT_ID || config.NOTIFICATION_BOT.CHAT_ID || undefined
+}
 
-BOT.onText(/\/command (.+)/, (message, match) => {
-	switch (match[1]) {
-		case 'restart':
-			break;
+const HEALTH_BOT = new TelegramBot(HEALTH.token, { polling: true });
+const NOTIFICATION_BOT = new TelegramBot(NOTIFICATION.token, { polling: true });
 
-		case 'getid':
-			console.log(message.chat.id);
-			break;
-	}
-});
-
-BOT.on('polling_error', (error) => {
+HEALTH_BOT.on('polling_error', (error) => {
 	console.log(error);
 });
 
-async function sendTelegramBotMessage (message) {
-	return await BOT.sendMessage(chatId, message);
+NOTIFICATION_BOT.on('polling_error', (error) => {
+	console.log(error);
+});
+
+async function sendHealthBotMessage (message) {
+	return await HEALTH_BOT.sendMessage(HEALTH.chatId, message);
 };
 
-module.exports = sendTelegramBotMessage;
+async function sendNotificationBotMessage (message) {
+	return await NOTIFICATION_BOT.sendMessage(NOTIFICATION.chatId, message);
+}
+
+module.exports = {
+	sendHealthBotMessage,
+	sendNotificationBotMessage
+}

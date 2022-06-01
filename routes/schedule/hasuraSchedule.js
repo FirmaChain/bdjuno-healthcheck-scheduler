@@ -1,8 +1,11 @@
 const { execCommand } = require('../../components/bashCommand');
 const startFetchBlock = require('../../components/graphql');
-const sendTelegramBotMessage = require('../../components/telegramBot');
+const { sendHealthBotMessage, sendNotificationBotMessage } = require('../../components/telegramBot');
+// const sendTelegramBotMessage = require('../../components/telegramBot');
 const { BDJUNO_STOP_COMMAND, BDJUNO_START_COMMAND } = require('../../constants/commands');
-const { START_HASURA_SCHEDULING, STOP_BLOCK_HEIGHT, STOP_HASURA_SCHEDULING, NOW_BLOCK_HEIGHT_MESSAGE, WARNING_NOT_UPDATE_HIEGHT, RESTART_BDJUNO_SERVICE } = require('../../constants/messages');
+const { START_HASURA_SCHEDULING, STOP_HASURA_SCHEDULING, 
+				STOP_BLOCK_HEIGHT, NOW_BLOCK_HEIGHT_MESSAGE, 
+				WARNING_NOT_UPDATE_HIEGHT, RESTART_BDJUNO_SERVICE } = require('../../constants/messages');
 
 let prevBlockHeight = 0;
 let nextBlockHeight = 0;
@@ -24,12 +27,12 @@ function checkBlock(blockHeight) {
 		warningStack = 0;
 
 		// Send stop block update height
-		sendTelegramBotMessage(STOP_BLOCK_HEIGHT(blockHeight));
+		sendNotificationBotMessage(STOP_BLOCK_HEIGHT(blockHeight));
 
 		execCommand(BDJUNO_STOP_COMMAND(), (result) => {
 			setTimeout(() => {
 				execCommand(BDJUNO_START_COMMAND(), (result) => {
-					sendTelegramBotMessage(RESTART_BDJUNO_SERVICE());
+					sendHealthBotMessage(RESTART_BDJUNO_SERVICE());
 				});
 			}, 3000);
 		});
@@ -44,7 +47,7 @@ function checkBlock(blockHeight) {
 		warningStack++;
 
 		// Send not block update height
-		sendTelegramBotMessage(WARNING_NOT_UPDATE_HIEGHT(prevBlockHeight, nextBlockHeight));
+		sendHealthBotMessage(WARNING_NOT_UPDATE_HIEGHT(prevBlockHeight, nextBlockHeight));
 	} else {
 		warningStack = 0;
 	}
@@ -63,15 +66,16 @@ function startScheduleForHasura(req, res) {
 	}
 
 	// Send start message
-	sendTelegramBotMessage(START_HASURA_SCHEDULING());
+	sendHealthBotMessage(START_HASURA_SCHEDULING());
 
 	hasuraInfo.isStarted = true;
 	hasuraInfo.interval = setInterval(async () => {
 		const blockHeight = await getBlockInfo();
 
 		// Send now block height message
-		if (warningStack === 0 && prevBlockHeight !== nextBlockHeight)
-			sendTelegramBotMessage(NOW_BLOCK_HEIGHT_MESSAGE(blockHeight));
+		if (warningStack === 0 && prevBlockHeight !== nextBlockHeight) {
+			sendHealthBotMessage(NOW_BLOCK_HEIGHT_MESSAGE(blockHeight));
+		}
 
 		checkBlock(blockHeight);
 	}, 1000 * 10);
@@ -94,7 +98,7 @@ function stopScheduleForHasura(req, res) {
 		return;
 	}
 
-	sendTelegramBotMessage(STOP_HASURA_SCHEDULING());
+	sendHealthBotMessage(STOP_HASURA_SCHEDULING());
 
 	hasuraInfo.isStarted = false;
 	clearInterval(hasuraInfo.interval);

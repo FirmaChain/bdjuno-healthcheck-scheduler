@@ -1,6 +1,13 @@
 {
     "HASURA_ADMIN_SECRET": "",
     "GRAPHQL_URL": "http://127.0.0.1:8080/v1/graphql",
-    "TOKEN": "numbering:string",
-    "CHAT_ID": "numbering"
+
+    "HEALTH_BOT": {
+        "TOKEN": "numbering:string",
+        "CHAT_ID": "numbering"
+    },
+    "NOTIFICATION_BOT": {
+        "TOKEN": "numbering:string",
+        "CHAT_ID": "numbering"
+    }
 }
