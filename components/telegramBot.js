@@ -23,11 +23,63 @@ NOTIFICATION_BOT.on('polling_error', (error) => {
 });
 
 async function sendHealthBotMessage (message) {
-	return await HEALTH_BOT.sendMessage(HEALTH.chatId, message);
+	const sendResult = await healthBotMessage(message);
+
+	if (!sendResult.isSended) {
+		const retrySendResult = await healthBotMessage(message);
+
+		if (!retrySendResult.isSended) {
+			console.log(retrySendResult.message);
+		}
+	}
 };
 
+async function healthBotMessage(message) {
+	try {
+		await HEALTH_BOT.sendMessage(HEALTH.chatId, message);
+
+		return {
+			isSended: true,
+			message: ''
+		}
+	} catch (e) {
+		console.log(e);
+
+		return {
+			isSended: true,
+			message: e
+		}
+	}
+}
+
 async function sendNotificationBotMessage (message) {
-	return await NOTIFICATION_BOT.sendMessage(NOTIFICATION.chatId, message);
+	const sendResult = notificationBotMessage(message);
+
+	if (!sendResult.isSended) {
+		const retrySendResult = await notificationBotMessage(message);
+
+		if (!retrySendResult.isSended) {
+			console.log(retrySendResult.message);
+		}
+	}
+}
+
+async function notificationBotMessage(message) {
+	try {
+		await NOTIFICATION_BOT.sendMessage(NOTIFICATION.chatId, message);
+
+		return {
+			isSended: true,
+			message: ''
+		}
+	} catch (e) {
+		console.log(e);
+
+		return {
+			isSended: true,
+			message: e
+		}
+	}
 }
 
 module.exports = {
