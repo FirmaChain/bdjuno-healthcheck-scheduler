@@ -1,7 +1,6 @@
 const { execCommand } = require('../../components/bashCommand');
 const startFetchBlock = require('../../components/graphql');
 const { sendHealthBotMessage, sendNotificationBotMessage } = require('../../components/telegramBot');
-// const sendTelegramBotMessage = require('../../components/telegramBot');
 const { BDJUNO_STOP_COMMAND, BDJUNO_START_COMMAND } = require('../../constants/commands');
 const { START_HASURA_SCHEDULING, STOP_HASURA_SCHEDULING, 
 				STOP_BLOCK_HEIGHT, NOW_BLOCK_HEIGHT_MESSAGE, 

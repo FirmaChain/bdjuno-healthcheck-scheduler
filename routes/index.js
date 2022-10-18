@@ -1,7 +1,6 @@
 const route = require('express').Router();
 
 const hasuraSchedule = require('./schedule/hasuraSchedule');
-// const bashSchedule = require('./schedule/bashSchdule');
 
 route.get('/health', (req, res) => {
     res.send('healthcheck');

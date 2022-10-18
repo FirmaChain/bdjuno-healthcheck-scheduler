@@ -53,7 +53,7 @@ async function healthBotMessage(message) {
 }
 
 async function sendNotificationBotMessage (message) {
-	const sendResult = notificationBotMessage(message);
+	const sendResult = await notificationBotMessage(message);
 
 	if (!sendResult.isSended) {
 		const retrySendResult = await notificationBotMessage(message);
