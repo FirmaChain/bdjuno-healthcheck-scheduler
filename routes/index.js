@@ -10,7 +10,4 @@ route.get('/health', (req, res) => {
 route.get('/hasura/schedule/start', hasuraSchedule.startScheduleForHasura);
 route.get('/hasura/schedule/stop', hasuraSchedule.stopScheduleForHasura);
 
-// route.get('/bash/schedule/start', bashSchedule.startScheduleForBash);
-// route.get('/bash/schedule/stop', bashSchedule.stopScheduleForBash);
-
 module.exports = route;

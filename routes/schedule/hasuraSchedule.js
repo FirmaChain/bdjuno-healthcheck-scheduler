@@ -31,8 +31,9 @@ function checkBlock(blockHeight) {
 
 		execCommand(BDJUNO_STOP_COMMAND(), (result) => {
 			setTimeout(() => {
-				execCommand(BDJUNO_START_COMMAND(), (result) => {
-					sendHealthBotMessage(RESTART_BDJUNO_SERVICE());
+				execCommand(BDJUNO_START_COMMAND(), async (result) => {
+					await sendHealthBotMessage(RESTART_BDJUNO_SERVICE());
+					await sendNotificationBotMessage(RESTART_BDJUNO_SERVICE());
 				});
 			}, 3000);
 		});
