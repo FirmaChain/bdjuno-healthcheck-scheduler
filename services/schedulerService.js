@@ -61,7 +61,7 @@ class SchedulerSerivce {
         await sendNotificationBotMessage(MSG_ERROR_NOT_UPDATE(this.nowBlockHeight));
 
         await restartBDJunoProcess(async () => {
-          await sendHealthBotMessage(MSG_RESTART_BDJUNO);
+          await sendNotificationBotMessage(MSG_RESTART_BDJUNO);
         });
       }
     } else {
