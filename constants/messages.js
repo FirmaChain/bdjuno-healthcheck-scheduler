@@ -1,45 +1,16 @@
-// Start monitoring
-const START_HASURA_SCHEDULING = () => {
-  return `[ ◎ START HASURA SCHEDULING ◎ ]`;
-}
+const MSG_START_SCHEDULING = `◎ START SCHEDULING ◎`;
+const MSG_STOP_SCHEDULING = `◎ STOP SCHEDULING ◎`;
+const MSG_RESTART_BDJUNO = `◎ RESTART BDJUNO SERVICE ◎`;
 
-const STOP_HASURA_SCHEDULING = () => {
-  return `[ ◎ STOP HASURA SCHEDULING ◎ ]`;
+const MSG_BLOCK_HEIGHT = (height) => { return `[INFO] BLOCK HEIGHT - ${height}`; };
+const MSG_WARNING_NOT_UPDATE = (height, stack) => {
+  return `⚠️ [WARNING] - NOT UPDATE BLOCK HEIGHT\nHeight - ${height}\nStack - ${stack}`;
 }
-
-// Now height of recent block
-const NOW_BLOCK_HEIGHT_MESSAGE = (height) => {
-  return `[ ◇ NOW BLOCK HEIGHT ◇ - ${height}]`;
-}
-
-// The height of the block is not updated.
-const WARNING_NOT_UPDATE_HIEGHT = (prevHeight, nowHeight) => {
-  return `
-[ ▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ \n
-\t NOT UPDATE HEIGHT \n
-\t height: ${prevHeight} \n
-▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ ]`;
-}
-
-// Stop block update height
-const STOP_BLOCK_HEIGHT = (height) => {
-  return `
-[ ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n
-\t STOP BLOCK HEIGHT \n
-\t height: ${height} \n
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ ]`;
-}
-
-// Restart BDJuno service
-const RESTART_BDJUNO_SERVICE = () => {
-  return `[ ◎ RESTART BDJUNO SERVICE ◎ ]`;
+const MSG_ERROR_NOT_UPDATE = (height) => {
+  return `❌ [ERROR] - NOT UPDATE BLOCK HEIGHT\nHeight - ${height}`;
 }
 
 module.exports = {
-  START_HASURA_SCHEDULING,
-  STOP_HASURA_SCHEDULING,
-  NOW_BLOCK_HEIGHT_MESSAGE,
-  WARNING_NOT_UPDATE_HIEGHT,
-  STOP_BLOCK_HEIGHT,
-  RESTART_BDJUNO_SERVICE
+  MSG_START_SCHEDULING, MSG_STOP_SCHEDULING, MSG_RESTART_BDJUNO,
+  MSG_BLOCK_HEIGHT, MSG_WARNING_NOT_UPDATE, MSG_ERROR_NOT_UPDATE
 }

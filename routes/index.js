@@ -1,12 +1,11 @@
 const route = require('express').Router();
-
-const hasuraSchedule = require('./schedule/hasuraSchedule');
+const schedulerRoute = require('./scheduler');
 
 route.get('/health', (req, res) => {
-    res.send('healthcheck');
+	res.send('healthcheck');
 });
 
-route.get('/hasura/schedule/start', hasuraSchedule.startScheduleForHasura);
-route.get('/hasura/schedule/stop', hasuraSchedule.stopScheduleForHasura);
+route.get('/schedule/start', schedulerRoute.startScheduler);
+route.get('/schedule/stop', schedulerRoute.stopScheduler);
 
 module.exports = route;

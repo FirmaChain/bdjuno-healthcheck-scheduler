@@ -1,16 +1,17 @@
 const { exec } = require('child_process');
+const { ErrorLog } = require('./logger');
 
 function execCommand(cmd, callback) {
 	try {
 		exec(cmd, (error, stdout, stderr) => {
-			if (!error) {
-				callback(true);
-			} else {
-				callback(false);
+			if (error) {
+				ErrorLog(error);
+				throw error;
 			}
+			callback();
 		});
 	} catch (e) {
-		callback(false);
+		throw e;
 	}
 }
 

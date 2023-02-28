@@ -11,5 +11,5 @@ app.use(compression());
 app.use('/', routes);
 
 app.listen(port, () => {
-    console.log('server is running');
+	console.log(`server is running | listen port : ${port}`);
 });
