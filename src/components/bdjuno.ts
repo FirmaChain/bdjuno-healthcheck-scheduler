@@ -1,11 +1,8 @@
-const { execCommand } = require("../utils/bashCommand");
-const { ErrorLog, InfoLog } = require("../utils/logger");
-const {
-  BDJUNO_START_COMMAND,
-  BDJUNO_STOP_COMMAND
-} = require("../constants/commands");
+import { BDJUNO_START_COMMAND, BDJUNO_STOP_COMMAND } from "../constants/commands";
+import { execCommand } from "src/utils/bashCommand";
+import { ErrorLog, InfoLog } from "src/utils/logger";
 
-async function restartBDJunoProcess(callback) {
+export const restartBDJunoProcess = (callback: () => void) => {
   InfoLog(`Kill and restart the bdjuno service`);
   try {
     execCommand(BDJUNO_STOP_COMMAND, async () => {
@@ -24,15 +21,10 @@ async function restartBDJunoProcess(callback) {
   }
 }
 
-async function stopBDJunoProcess(callback) {
-  execCommand(BDJUNO_STOP_COMMAND, async (result) => {
+export const stopBDJunoProcess = (callback: () => void) => {
+  execCommand(BDJUNO_STOP_COMMAND, async () => {
     InfoLog(`Success kill the bdjuno service`);
 
     callback();
   });
-}
-
-module.exports = {
-  restartBDJunoProcess,
-  stopBDJunoProcess
 }

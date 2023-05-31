@@ -1,9 +1,8 @@
-const express = require('express');
-const compression = require('compression');
+import express, { Express } from 'express';
+import compression from 'compression';
+import { routes } from './routes/index';
 
-const routes = require('./routes');
-
-const app = express();
+const app: Express = express();
 const port = 4000;
 
 app.use(express.json());

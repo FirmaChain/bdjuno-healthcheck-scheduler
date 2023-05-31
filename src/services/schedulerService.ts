@@ -1,30 +1,29 @@
+import { restartBDJunoProcess, stopBDJunoProcess } from "../components/bdjuno";
+import { getBlockFromHasura } from "../components/graphql";
+import { ErrorLog, InfoLog } from "../utils/logger";
 
-const getBlockFromHasura = require("../components/graphql");
-const {
+import {
   sendHealthBotMessage,
   sendNotificationBotMessage
-} = require("../components/telegramBot");
-
-const {
+} from "../components/telegramBot";
+import { 
   MSG_BLOCK_HEIGHT,
   MSG_ERROR_NOT_UPDATE,
-  MSG_WARNING_NOT_UPDATE,
+  MSG_RESTART_BDJUNO,
   MSG_START_SCHEDULING,
   MSG_STOP_SCHEDULING,
-  MSG_RESTART_BDJUNO
-} = require("../constants/messages");
-const { ErrorLog, InfoLog } = require("../utils/logger");
-const { restartBDJunoProcess } = require("../components/bdjuno");
+  MSG_WARNING_NOT_UPDATE
+} from "../constants/messages";
 
 const MAX_WARNING_STACK = 5;
 
-class SchedulerSerivce {
+export class SchedulerSerivce {
   prevBlockHeight = 0;
   nowBlockHeight = 0;
   warningStack = 0;
 
+  schedulerInterval: NodeJS.Timer | undefined;
   isStarted = false;
-  schedulerInterval;
   intervalTime = 15;
 
   async startScheduler() {
@@ -47,33 +46,32 @@ class SchedulerSerivce {
   }
 
   async start() {
-    // try {
-    this.nowBlockHeight = await getBlockFromHasura();
+    try {
+      this.nowBlockHeight = await getBlockFromHasura();
 
-    if (this.prevBlockHeight === this.nowBlockHeight) {
-      this.warningStack++;
-      // send telegram message
-      await sendHealthBotMessage(MSG_WARNING_NOT_UPDATE(this.nowBlockHeight, this.warningStack));
+      if (this.prevBlockHeight === this.nowBlockHeight) {
+        // send telegram message
+        this.warningStack++;
+        await sendHealthBotMessage(MSG_WARNING_NOT_UPDATE(this.nowBlockHeight, this.warningStack));
 
-      if (this.warningStack > MAX_WARNING_STACK) {
+        if (this.warningStack > MAX_WARNING_STACK) {
+          this.warningStack = 0;
+
+          await sendNotificationBotMessage(MSG_ERROR_NOT_UPDATE(this.nowBlockHeight));
+
+          restartBDJunoProcess(async () => {
+            await sendNotificationBotMessage(MSG_RESTART_BDJUNO);
+          });
+        }
+      } else {
+        this.prevBlockHeight = this.nowBlockHeight;
         this.warningStack = 0;
 
-        await sendNotificationBotMessage(MSG_ERROR_NOT_UPDATE(this.nowBlockHeight));
-
-        await restartBDJunoProcess(async () => {
-          await sendNotificationBotMessage(MSG_RESTART_BDJUNO);
-        });
+        await sendHealthBotMessage(MSG_BLOCK_HEIGHT(this.nowBlockHeight));
       }
-    } else {
-      this.prevBlockHeight = this.nowBlockHeight;
-      this.warningStack = 0;
-
-      await sendHealthBotMessage(MSG_BLOCK_HEIGHT(this.nowBlockHeight));
+    } catch (e) {
+      ErrorLog(e);
     }
-    // } catch (e) {
-    //   console.log(111);
-    //   throw JSON.stringify(e);
-    // }
   }
 
   async stopScheduler() {
@@ -86,7 +84,7 @@ class SchedulerSerivce {
       this.isStarted = false;
       clearInterval(this.schedulerInterval);
 
-      await stopBDJunoProcess(async () => {
+      stopBDJunoProcess(async () => {
         await sendHealthBotMessage(MSG_STOP_SCHEDULING);
       });
     } catch (e) {
@@ -94,5 +92,3 @@ class SchedulerSerivce {
     }
   }
 }
-
-module.exports = new SchedulerSerivce();

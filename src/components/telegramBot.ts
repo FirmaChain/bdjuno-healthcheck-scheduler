@@ -1,6 +1,6 @@
-const TelegramBot = require('node-telegram-bot-api');
-const config = require('../config.json');
-const { InfoLog, ErrorLog } = require('../utils/logger');
+import TelegramBot from 'node-telegram-bot-api';
+import config from '../../config.json';
+import { ErrorLog, InfoLog } from 'src/utils/logger';
 
 const HEALTH = {
 	token: process.env.HEALTH_BOT_TOKEN || config.HEALTH_BOT.TOKEN || undefined,
@@ -12,8 +12,8 @@ const NOTIFICATION = {
 	chatId: process.env.NOTIFICATION_BOT_CHAT_ID || config.NOTIFICATION_BOT.CHAT_ID || undefined
 }
 
-const HEALTH_BOT = new TelegramBot(HEALTH.token, { polling: true });
-const NOTIFICATION_BOT = new TelegramBot(NOTIFICATION.token, { polling: true });
+const HEALTH_BOT: TelegramBot = new TelegramBot(HEALTH.token!, { polling: true });
+const NOTIFICATION_BOT: TelegramBot = new TelegramBot(NOTIFICATION.token!, { polling: true });
 
 HEALTH_BOT.on('polling_error', (error) => {
 	ErrorLog(error);
@@ -23,9 +23,9 @@ NOTIFICATION_BOT.on('polling_error', (error) => {
 	ErrorLog(error);
 });
 
-async function sendHealthBotMessage(message) {
+export const sendHealthBotMessage = async (message: string) => {
 	try {
-		await HEALTH_BOT.sendMessage(HEALTH.chatId, message, { disable_web_page_preview: true });
+		await HEALTH_BOT.sendMessage(HEALTH.chatId!, message, { disable_web_page_preview: true });
 		InfoLog(message);
 	} catch (e) {
 		ErrorLog({ func: `sendHealthBotMessage`, message: message });
@@ -33,17 +33,12 @@ async function sendHealthBotMessage(message) {
 	}
 }
 
-async function sendNotificationBotMessage(message) {
+export const sendNotificationBotMessage = async (message: string) => {
 	try {
-		await NOTIFICATION_BOT.sendMessage(NOTIFICATION.chatId, message, { disable_web_page_preview: true });
+		await NOTIFICATION_BOT.sendMessage(NOTIFICATION.chatId!, message, { disable_web_page_preview: true });
 		InfoLog(message);
 	} catch (e) {
 		ErrorLog({ func: `sendNotificationBotMessage`, message: message });
 		throw e;
 	}
-}
-
-module.exports = {
-	sendHealthBotMessage,
-	sendNotificationBotMessage
 }
