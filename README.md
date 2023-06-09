@@ -1,6 +1,4 @@
 # bdjuno-healthcheck-scheduler
-![image](https://github.com/FirmaChain/bdjuno-healthcheck-scheduler/assets/93503020/efb1cff6-5070-4f48-8735-62fcedfe509f)
-![image](https://github.com/FirmaChain/bdjuno-healthcheck-scheduler/assets/93503020/baab58f6-5764-44cb-a6b9-64e96850fcba)
 ![image](https://github.com/FirmaChain/bdjuno-healthcheck-scheduler/assets/93503020/0b9168a8-75fe-47fe-841b-17fd6ce5597d)
 
 <br/>
@@ -109,8 +107,21 @@ export const COMMAND_CLEAN_QUEUE = "";
 
 export const GUIDE_DESC = "";
 : I recommend that you write down a description of the commands.
-
 ```
+
+<br/>
+
+This is an example image of a **Telegram command** usage.
+
+![image](https://github.com/FirmaChain/bdjuno-healthcheck-scheduler/assets/93503020/efb1cff6-5070-4f48-8735-62fcedfe509f)
+
+<br/>
+
+This is an example of a Telegram room that is being monitored.
+
+![image](https://github.com/FirmaChain/bdjuno-healthcheck-scheduler/assets/93503020/baab58f6-5764-44cb-a6b9-64e96850fcba)
+
+<br/>
 
 ### 4. Register BDJuno service
 This application must be reprinted from the registration of BDJuno into the service.
