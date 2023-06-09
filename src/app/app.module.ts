@@ -6,8 +6,9 @@ import {
   initLogDir,
   winstonOptions
 } from '../utils/logger.util';
-import { HealthSchedulerModule } from 'src/health-scheduler/health-scheduler.module';
-import { NotificationSchedulerModule } from 'src/notification-scheduler/notification-scheduler.module';
+import { HealthSchedulerModule } from '../health-scheduler/health-scheduler.module';
+import { NotificationSchedulerModule } from '../notification-scheduler/notification-scheduler.module';
+import { AppController } from './app.controller';
 
 initLogDir();
 
@@ -20,6 +21,6 @@ initLogDir();
     HealthSchedulerModule,
     NotificationSchedulerModule,
   ],
-  controllers: [],
+  controllers: [AppController],
 })
 export class AppModule {}
