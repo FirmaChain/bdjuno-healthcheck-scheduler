@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-
-import { HealthSchedulerTaskService } from './health-scheduler-task.service';
-import { HasuraService } from 'src/hasura/hasura.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigService } from '@nestjs/config';
+
+import { HealthSchedulerTaskService } from './health-scheduler-task.service';
+import { HasuraModule } from 'src/hasura/hasura.module';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    HasuraModule,
   ],
   providers: [
     HealthSchedulerTaskService,
     ConfigService,
-    HasuraService,
   ],
   exports: [
     HealthSchedulerTaskService

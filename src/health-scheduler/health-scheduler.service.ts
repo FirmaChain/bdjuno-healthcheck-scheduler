@@ -8,9 +8,9 @@ import {
   COMMAND_HEALTH_STOP,
   COMMAND_LIST,
   GUIDE_DESC
-} from 'src/constants/telegraf.constant';
-import { HealthBotService } from 'src/health-bot/health-bot.service';
-import { HealthSchedulerTaskService } from 'src/health-scheduler-task/health-scheduler-task.service';
+} from '../constants/telegraf.constant';
+import { HealthBotService } from '../health-bot/health-bot.service';
+import { HealthSchedulerTaskService } from '../health-scheduler-task/health-scheduler-task.service';
 
 @Injectable()
 export class HealthSchedulerService {

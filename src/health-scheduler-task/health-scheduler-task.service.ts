@@ -1,8 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 
 import { HasuraService } from 'src/hasura/hasura.service';
 import Queue from 'src/utils/queue.utils';
@@ -23,8 +21,6 @@ export class HealthSchedulerTaskService {
     private readonly configService: ConfigService,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly hasuraService: HasuraService,
-
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {
     this.maxWarningStack = this.configService.get<number>('WARNING_STACK');
     this.intervalSeconds = this.configService.get<number>('INTERVAL_SECONDS');
