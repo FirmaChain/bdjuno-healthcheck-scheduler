@@ -7,7 +7,6 @@ import {
   winstonOptions
 } from '../utils/logger.util';
 import { HealthSchedulerModule } from '../health-scheduler/health-scheduler.module';
-import { NotificationSchedulerModule } from '../notification-scheduler/notification-scheduler.module';
 import { AppController } from './app.controller';
 
 initLogDir();
@@ -19,7 +18,6 @@ initLogDir();
     }),
     WinstonModule.forRoot(winstonOptions),
     HealthSchedulerModule,
-    NotificationSchedulerModule,
   ],
   controllers: [AppController],
 })

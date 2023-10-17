@@ -31,7 +31,7 @@ export class HealthBotService {
       await this.bot.telegram.sendMessage(this.chatId, message, { disable_web_page_preview: true });
       this.logger.info(`✅ [HealthBot] Success sendMessage : ${message}`);
     } catch (e) {
-      this.logger.error(`❌ [HealthBot] Error sendMessage : ${message}`);
+      this.logger.error(`❌ [HealthBot] Error sendMessage : ${message} - ${e}`);
     }
   }
 }

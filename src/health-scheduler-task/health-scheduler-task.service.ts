@@ -1,17 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 import { HasuraService } from 'src/hasura/hasura.service';
 import Queue from 'src/utils/queue.utils';
-import { BDJUNO_RESTART_COMMAND, BDJUNO_START_COMMAND, BDJUNO_STOP_COMMAND } from 'src/constants/bdjuno.constant';
 import { executeCommand } from 'src/utils/task.util';
+import { BDJUNO_RESTART_COMMAND, BDJUNO_START_COMMAND, BDJUNO_STOP_COMMAND } from 'src/constants/bdjuno.constant';
 
 @Injectable()
 export class HealthSchedulerTaskService {
+  @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  
   private queue: Queue<number>;
 
   private jobName: string = "HEIGHT_JOB";
+  private notiJobName: string = "NOTIFICATION_JOB";
 
   private intervalSeconds: number = 0;
   private maxWarningStack: number = 0;
@@ -31,6 +36,7 @@ export class HealthSchedulerTaskService {
     const isRunInterval = this.schedulerRegistry.getIntervals().includes(this.jobName);
     if (isRunInterval) {
       callback(`❎ Interval is already running : ${this.jobName}`);
+      return ;
     }
 
     try {
@@ -70,6 +76,7 @@ export class HealthSchedulerTaskService {
     const isRunInterval = this.schedulerRegistry.getIntervals().includes(this.jobName);
     if (!isRunInterval) {
       callback(`✅ Interval is no running : ${this.jobName}`);
+      return ;
     }
 
     try {
@@ -91,6 +98,7 @@ export class HealthSchedulerTaskService {
     if (isRunInterval) {
       this.schedulerRegistry.deleteInterval(this.jobName);
       callback(`❎ Interval is delete : ${this.jobName}`);
+      return ;
     }
 
     try {
@@ -129,6 +137,45 @@ export class HealthSchedulerTaskService {
   async getIntervalName(callback: (message: string) => void) {
     const intervals = this.schedulerRegistry.getIntervals();
     callback(`interval name array : ${JSON.stringify(intervals)}`);
+  }
+
+  async startNotiScheduler(callback: (message: string) => void) {
+    const isRunInterval = this.schedulerRegistry.getIntervals().includes(this.notiJobName);
+    if (isRunInterval) {
+      callback(`❎ Interval is already running : ${this.notiJobName}`);
+      return ;
+    }
+
+    try {
+      this.schedulerRegistry.addInterval(this.notiJobName, setInterval(async () => {
+        if (!this.queue.isEmpty()) {
+          const height = this.queue.dequeue();
+          this.queue.clean();
+    
+          callback(`❌ Not update block height : ${height}`);
+        } else {
+          this.logger.info(`✅ Queue has no hieght list`);
+        }
+      }, 60 * 1000));
+    } catch (error) {
+      this.logger.error(`❌ Failed startNotiScheduler: ${error}`);
+    }
+  }
+
+  async stopNotiScheduler(callback: (message: string) => void) {
+    const isRunInterval = this.schedulerRegistry.getIntervals().includes(this.notiJobName);
+    if (!isRunInterval) {
+      callback(`✅ Interval is no running : ${this.notiJobName}`);
+      return ;
+    }
+
+    try {
+      this.schedulerRegistry.deleteInterval(this.notiJobName);
+      callback(`✅ Success stop notification scheduler`);
+    } catch (error) {
+      callback(`❌ Failed stop notification scheduler`);
+      this.logger.error(`❌ Failed stop notification scheduler : ${error}`);
+    }
   }
 
   cleanQueue(callback: (message: string) => void) {

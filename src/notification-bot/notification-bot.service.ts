@@ -25,7 +25,7 @@ export class NotificationBotService {
       await this.bot.telegram.sendMessage(this.chatId, message, { disable_web_page_preview: true });
       this.logger.info(`✅ [NotificationBot] Success sendMessage : ${message}`);
     } catch (e) {
-      this.logger.error(`❌ [NotificationBot] Error sendMessage : ${message}`);
+      this.logger.error(`❌ [NotificationBot] Error sendMessage : ${message} - ${e}`);
     }
   }
 }

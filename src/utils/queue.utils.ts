@@ -23,7 +23,7 @@ class Queue<T> {
     }
   }
 
-  decueue(): T | undefined {
+  dequeue(): T | undefined {
     const result = this._store.shift();
     this._saveToFile();
     return result;
